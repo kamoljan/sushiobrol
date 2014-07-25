@@ -1,60 +1,92 @@
-# Ikura consists of eggs for Sushi
+# Image specification
 
-## API
+    | Density                 | Thumbnail | Ad view |
+    |-------------------------|-----------|---------|
+    | xlarge (xhdpi): 640x960 | 320       | 640     |
+    | large (hdpi): 480x800   | 240       | 480     |
+    | medium (mdpi): 320x480  | 160       | 320     |
 
-### Put a file
 
-Request:
+# API
 
-	PUT / HTTP/1.1
-	Host: www.example.com
-	Authorization:XXX-FIEXAMPLE=
-	Content-Length: 65534
-	[file content]
+### PUT / HTTP/1.1
+	
+    Content-Length: 65534
+    [file content]
+    
+    HTTP/1.1 200 OK
+    [IMAGE META]
+    {
+        "image": {
+        	"machine": "0001",
+            "hash": "8787bec619ff019fd17fe02599a384d580bf6779",
+            "color": "ACA0AC",
+            "width": 840,
+            "height": 756,
+           	"density":[
+           	    {
+           	    	"name": "xlarge",
+           	    	"value": [
+           	    	    {"ui": "view", "value": {"width": 640, "height": 543}},
+           	    	    {"ui": "list", "value": {"width": 320, "height": 284}}
+           	    	]
+           	    },
+           	    {
+           	        "name": "large",
+           	    	"value": [
+           	    	    {"ui": "view", "value": {"width": 480, "height": 320}},
+           	    	    {"ui": "list", "value": {"width": 240, "height": 190}}
+           	    	]
+           	    },
+           	    {
+           	    	"name": "medium",
+           	    	"value": [
+           	    	    {"ui": "view", "value": {"width": 320, "height": 256}},
+           	    	    {"ui": "list", "value": {"width": 160, "height": 102}}
+           	    	]
+           	    }
+            ]
+        }
+    }
 
-Response:
-
-	HTTP/1.1 200 OK
-	[FID]
-
-FID Representation:
-
-	machine_id(4bytes) + md5(32bytes) + file_size(8bytes)
-	00014dc8263cf28b66502d0d758sdfasdfasfasdqwer
-
-### Delete a file
-
-Request:
-
-	DELETE /[FID] HTTP/1.1
-	Host: www.example.com
-	Authorization:XXX-FIEXAMPLE=
-
-Response:
-
-	HTTP/1.1 200 OK
-
-### Get a file
-
-Request:
-
-	GET /[FID] HTTP/1.1
-	Host: www.example.com
-
-Response:
-
-	Content-Type:image/jpeg
-	HTTP/1.1 200 OK
-	[file content]
-
-### File existence
-
-Request:
-
-	HEAD /[FID] HTTP/1.1
-	Host: www.example.com
-
-Response:
+### GET /[FID] HTTP/1.1
 
 	Content-Type:image/jpeg
 	HTTP/1.1 200 OK
+	[file content]
+
+
+### FID
+
+0001/webp/origin/04...8b-ACA0AC-640-543
+0001/webp/xlarge/view/04...8b-ACA0AC-640-543
+0001/webp/xlarge/list/04...8b-ACA0AC-320-284
+0001/webp/large/view/04...8b-ACA0AC-480-320
+0001/webp/large/list/04...8b-ACA0AC-240-190
+0001/webp/medium/view/04...8b-ACA0AC-320-256
+0001/webp/medium/list/04...8b-ACA0AC-160-102
+
+### PARSE
+
+	image_meta:[IMAGE META]
+	<!-- generate it in Parse
+    xlarge_view:0001040d...8b-ACA0AC-640-543
+    xlarge_list:0001040d...8b-ACA0AC-320-284
+    large_view:0002040d...8b-ACA0AC-480-320
+    large_list:0001040d...8b-ACA0AC-240-190
+    medium_view:0001040d...8b-ACA0AC-320-256
+    medium_list:0002040d...8b-ACA0AC-160-102
+    -->
+
+### DIR
+     
+	0001/
+	    webp/
+	        origin/04/0d/0001-04...8b-ACA0AC-640-543
+	        xlarge/view/04/0d/0001-04...8b-ACA0AC-640-543
+	        xlarge/list/04/0d/0001-04...8b-ACA0AC-320-284
+	        large/view/04/0d/0001-04...8b-ACA0AC-480-320
+	        large/list/04/0d/0001-04...8b-ACA0AC-240-190
+	        medium/view/04/0d/0001-04...8b-ACA0AC-320-256
+	        medium/list/04/0d/0001-04...8b-ACA0AC-160-102
+        jpeg/
