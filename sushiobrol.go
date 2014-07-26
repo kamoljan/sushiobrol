@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/kamoljan/battlefield/api"
-	"github.com/kamoljan/battlefield/conf"
+	"github.com/kamoljan/sushiobrol/api"
+	"github.com/kamoljan/sushiobrol/conf"
 )
 
 func initStore(path string) {
@@ -31,11 +31,11 @@ func logHandler(h http.Handler) http.Handler {
 }
 
 func main() {
-	initStore(conf.BattlefieldStore)
+	initStore(conf.SushiobrolStore)
 	http.HandleFunc("/", api.Put)
-	http.HandleFunc("/noimageprocess/", api.PutNoImageProcess)
-	http.HandleFunc("/egg/", api.Get)
-	err := http.ListenAndServe(fmt.Sprintf(":%d", conf.BattlefieldPort), logHandler(http.DefaultServeMux))
+	// http.HandleFunc("/noimageprocess/", api.PutNoImageProcess)
+	// http.HandleFunc("/egg/", api.Get)
+	err := http.ListenAndServe(fmt.Sprintf(":%d", conf.SushiobrolPort), logHandler(http.DefaultServeMux))
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}

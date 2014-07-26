@@ -90,3 +90,9 @@
 	        medium/view/04/0d/0001-04...8b-ACA0AC-320-256
 	        medium/list/04/0d/0001-04...8b-ACA0AC-160-102
         jpeg/
+
+### TEST
+
+	curl -XPUT http://localhost:9090/ -H "Content-type: image/jpeg" --data-binary @gopher.png
+	curl -v -XPUT -include --form key1=value1 --form upload=@gopher.png http://localhost:9090/
+
