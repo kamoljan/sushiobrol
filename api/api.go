@@ -1,30 +1,24 @@
 package api
 
-/*
-#cgo LDFLAGS: -lwebp -L/opt/local/lib/
-
-#include <stdlib.h>
-#include <webp/encode.h>
-*/
-import "C"
-
 import (
 	"bytes"
+	"crypto/sha1"
+	"fmt"
 	"image"
+	"image/jpeg"
 	_ "image/jpeg"
 	_ "image/png"
 	"io"
-	"io/ioutil"
 	"log"
 	"net/http"
-	"reflect"
+	"os"
 
-	// _ "code.google.com/p/go.image/webp"
-	// _ "code.google.com/p/vp8-go/webp"
-	// "github.com/chai2010/gopkg/image/webp"
-	"github.com/dgryski/go-webp"
+	// image_ext "github.com/chai2010/gopkg/image"
+	_ "github.com/chai2010/gopkg/image/png"
 
-	//	"github.com/kamoljan/sushiobrol/conf"
+	// "github.com/dgryski/go-webp"
+
+	"github.com/kamoljan/sushiobrol/conf"
 	"github.com/kamoljan/sushiobrol/json"
 )
 
@@ -96,28 +90,49 @@ func Put(w http.ResponseWriter, r *http.Request) {
 		w.Write(json.Message("ERROR", "Unable to decode your image"))
 		return
 	}
+	fmt.Sprintf("test/%s", buf.Bytes())
 
-	var output []byte
-	switch t := img.(type) {
-	case *image.NRGBA:
-		output = webp.WebPEncodeLosslessRGBA(t.Pix, t.Rect.Dx(), t.Rect.Dy(), t.Stride)
-	case *image.RGBA:
-		output = webp.WebPEncodeLosslessRGBA(t.Pix, t.Rect.Dx(), t.Rect.Dy(), t.Stride)
-	default:
-		log.Println("unknown type: ", reflect.TypeOf(img))
-		w.Write(json.Message("ERROR", "Unknown type"))
+	// PATH
+	path := fmt.Sprintf("test/%x", sha1.Sum(buf.Bytes()))
+
+	fmt.Printf("conf.Image.Machine = %s", conf.Image.Machine)
+
+	// CREATE DESTINATION FILE
+	out, err := os.Create(path)
+	if err != nil {
+		w.Write(json.Message("ERROR", "Unable to create a file"))
 		return
 	}
+	defer out.Close()
 
-	ioutil.WriteFile("test/gopher.webp", output, 0666)
-	webp.FreeWebP(output)
+	err = jpeg.Encode(out, img, nil) // write image to file
+	if err != nil {
+		log.Println("Unable to save your image to file")
+		w.Write(json.Message("ERROR", "Unable to encode into jpeg"))
+		return
+	}
 }
 
-// func convertToJPEG(w io.Writer, r io.Reader) error {
-// 	img, _, err := image.Decode(r)
-// 	if err != nil {
-// 		w.Write(json.Message("ERROR", "Unable to decode your image"))
-// 		return err
-// 	}
-// 	return jpeg.Encode(w, img)
-// }
+/*
+	0001/
+	    webp/
+	        origin/04/0d/0001-04...8b-ACA0AC-640-543
+	        xlarge/view/04/0d/0001-04...8b-ACA0AC-640-543
+	        xlarge/list/04/0d/0001-04...8b-ACA0AC-320-284
+	        large/view/04/0d/0001-04...8b-ACA0AC-480-320
+	        large/list/04/0d/0001-04...8b-ACA0AC-240-190
+	        medium/view/04/0d/0001-04...8b-ACA0AC-320-256
+	        medium/list/04/0d/0001-04...8b-ACA0AC-160-102
+        jpeg/
+*/
+func genPath(file string) string {
+	path := fmt.Sprintf(conf.SushiobrolStore+"%s/%s/%s", file[5:7], file[7:9], file)
+	log.Println(path)
+	return path
+}
+
+func genFile(eid string, color string, width, height int) string {
+	file := fmt.Sprintf("%04x_%s_%s_%d_%d", conf.SushiobrolId, eid, color, width, height)
+	log.Println(file)
+	return file
+}

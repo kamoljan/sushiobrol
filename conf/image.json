@@ -1,0 +1,5 @@
+{
+	"machine": "0001",
+	"density":["xlarge", "large", "medium"],
+	"ui": ["list", "view"]
+}
