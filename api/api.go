@@ -13,48 +13,25 @@ import (
 	"net/http"
 	"os"
 
-	// image_ext "github.com/chai2010/gopkg/image"
-	_ "github.com/chai2010/gopkg/image/png"
-
-	// "github.com/dgryski/go-webp"
+	// "github.com/chai2010/webp"
 
 	"github.com/kamoljan/sushiobrol/conf"
 	"github.com/kamoljan/sushiobrol/json"
 )
 
 /*
-   {
-       "image": {
-       	"machine": "0001",
-           "hash": "8787bec619ff019fd17fe02599a384d580bf6779",
-           "color": "ACA0AC",
-           "width": 840,
-           "height": 756,
-	       "density":[
-          	    {
-          	    	"name": "xlarge",
-          	    	"value": [
-          	    	    {"ui": "view", "value": {"width": 640, "height": 543}},
-          	    	    {"ui": "list", "value": {"width": 320, "height": 284}}
-          	    	]
-          	    },
-          	    {
-          	        "name": "large",
-          	    	"value": [
-          	    	    {"ui": "view", "value": {"width": 480, "height": 320}},
-          	    	    {"ui": "list", "value": {"width": 240, "height": 190}}
-          	    	]
-          	    },
-          	    {
-          	    	"name": "medium",
-          	    	"value": [
-          	    	    {"ui": "view", "value": {"width": 320, "height": 256}},
-          	    	    {"ui": "list", "value": {"width": 160, "height": 102}}
-          	    	]
-          	    }
-           ]
-       }
-   }
+{
+	"machine": "0001",
+	"format":["jpeg", "webp"],
+	"screen":[
+	    {"density": "xlarge", "ui": "view", "width": 640, "height": 543},
+   	    {"density": "xlarge", "ui": "list", "width": 320, "height": 284},
+   	    {"density": "large",  "ui": "view", "width": 480, "height": 320},
+   	    {"density": "large",  "ui": "list", "width": 240, "height": 190},
+   	    {"density": "medium", "ui": "view", "width": 320, "height": 256},
+   	    {"density": "medium", "ui": "list", "width": 160, "height": 102}
+    ]
+}
 */
 func Put(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "PUT" {
@@ -92,6 +69,28 @@ func Put(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Sprintf("test/%s", buf.Bytes())
 
+	// "machine": "0001",
+	// "format":["jpeg", "webp"],
+	// "screen":[
+	//     {"density": "xlarge", "ui": "view", "width": 640, "height": 543},
+	//     {"density": "xlarge", "ui": "list", "width": 320, "height": 284},
+	//     {"density": "large",  "ui": "view", "width": 480, "height": 320},
+	//     {"density": "large",  "ui": "list", "width": 240, "height": 190},
+	//     {"density": "medium", "ui": "view", "width": 320, "height": 256},
+	//     {"density": "medium", "ui": "list", "width": 160, "height": 102}
+	// ]
+
+	for _, format := range conf.Image.Format { // jpeg, webp, ...
+		fmt.Println("conf.Image.Format =", format)
+		for _, screen := range conf.Image.Screen {
+			fmt.Println("Screen =", screen)
+			fmt.Println("Screen.Density =", screen.Density)
+			fmt.Println("Screen.Ui =", screen.Ui)
+			fmt.Println("Screen.Width =", screen.Width)
+			fmt.Println("Screen.Height =", screen.Height)
+		}
+	}
+
 	// PATH
 	path := fmt.Sprintf("test/%x", sha1.Sum(buf.Bytes()))
 
@@ -116,7 +115,8 @@ func Put(w http.ResponseWriter, r *http.Request) {
 /*
 	0001/
 	    webp/
-	        origin/04/0d/0001-04...8b-ACA0AC-640-543
+	        origin/view/04/0d/0001-04...8b-ACA0AC-640-543
+    	    origin/list/04/0d/0001-04...8b-ACA0AC-320-271
 	        xlarge/view/04/0d/0001-04...8b-ACA0AC-640-543
 	        xlarge/list/04/0d/0001-04...8b-ACA0AC-320-284
 	        large/view/04/0d/0001-04...8b-ACA0AC-480-320

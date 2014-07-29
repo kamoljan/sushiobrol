@@ -17,17 +17,29 @@ const (
 
 var Image ImageConf
 
-/*
-{
-	"machine": "0001",
-	"density":["xlarge", "large", "medium"],
-	"ui": ["list", "view"]
-}
-*/
+// {
+// 	"machine": "0001",
+// 	"format":["jpeg", "webp"],
+// 	"screen":[
+// 	    {"density": "xlarge", "ui": "view", "width": 640, "height": 543},
+//    	{"density": "xlarge", "ui": "list", "width": 320, "height": 284},
+//    	{"density": "large",  "ui": "view", "width": 480, "height": 320},
+//    	{"density": "large",  "ui": "list", "width": 240, "height": 190},
+//    	{"density": "medium", "ui": "view", "width": 320, "height": 256},
+//    	{"density": "medium", "ui": "list", "width": 160, "height": 102}
+//  ]
+// }
 type ImageConf struct {
-	Machine string
-	Density []string
-	UI      []string
+	Machine string    `json:"machine"`
+	Format  []string  `json:"format"`
+	Screen  []Density `json:"screen"`
+}
+
+type Density struct {
+	Density string `json:"density"`
+	Ui      string `json:"ui"`
+	Width   int    `json:"width"`
+	Height  int    `json:"height"`
 }
 
 func initImageConf() {
