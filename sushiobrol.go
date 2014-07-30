@@ -10,8 +10,22 @@ import (
 	"github.com/kamoljan/sushiobrol/conf"
 )
 
-func initStore(path string) {
-	log.Println("Initializing data store...")
+func initStoreDirs() {
+	fmt.Println("Initializing data store...")
+	for _, format := range conf.Image.Format {
+		for _, screen := range conf.Image.Screen {
+			dir := fmt.Sprintf("%s/%s/%s/%s/%s", conf.SushiobrolStore, conf.Image.Machine, format, screen.Density, screen.Ui)
+			fmt.Print("dir = ", dir)
+			if err := os.MkdirAll(dir, 0755); err != nil {
+				log.Fatal("Was not able to create dirs ", err)
+			}
+			mkSubDirs(dir)
+		}
+	}
+	fmt.Println("...Done")
+}
+
+func mkSubDirs(path string) {
 	for i := 0; i < 256; i++ {
 		for x := 0; x < 256; x++ {
 			err := os.MkdirAll(fmt.Sprintf("%s/%02x/%02x", path, i, x), 0755)
@@ -20,7 +34,7 @@ func initStore(path string) {
 			}
 		}
 	}
-	log.Println("...Done") // total 65536 directories
+	fmt.Println("...65536 dirs are created")
 }
 
 func logHandler(h http.Handler) http.Handler {
@@ -31,7 +45,7 @@ func logHandler(h http.Handler) http.Handler {
 }
 
 func main() {
-	initStore(conf.SushiobrolStore)
+	initStoreDirs()
 	http.HandleFunc("/", api.Put)
 	// http.HandleFunc("/noimageprocess/", api.PutNoImageProcess)
 	// http.HandleFunc("/egg/", api.Get)

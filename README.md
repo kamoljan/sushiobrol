@@ -57,26 +57,26 @@
 
 
 ### FID
-
-0001/webp/origin/04...8b-ACA0AC-640-543
-0001/webp/xlarge/view/04...8b-ACA0AC-640-543
-0001/webp/xlarge/list/04...8b-ACA0AC-320-284
-0001/webp/large/view/04...8b-ACA0AC-480-320
-0001/webp/large/list/04...8b-ACA0AC-240-190
-0001/webp/medium/view/04...8b-ACA0AC-320-256
-0001/webp/medium/list/04...8b-ACA0AC-160-102
+<!-- 0001-jpeg-origin-view-04...8b-ACA0AC-640-543 -->
+<!-- 0001-jpeg-origin-list-04...8b-ACA0AC-640-543 -->
+{
+	"field": "xlarge_view", "value": "0001-webp-xlarge-view-04...8b-ACA0AC-640-543"
+	"field": "xlarge_list", "value": "0001-webp-xlarge-list-04...8b-ACA0AC-320-284"
+	"field": "large_view", "value": "0001-webp-large-view-04...8b-ACA0AC-480-320"
+	"field": "large_list", "value": "0001-webp-large-list-04...8b-ACA0AC-240-190"
+	"field": "medium_view", "value": "0001-webp-medium-view-04...8b-ACA0AC-320-256"
+	"field": "medium_list", "value": "0001-webp-medium-list-04...8b-ACA0AC-160-102"
+}
 
 ### PARSE
-
-	image_meta:[IMAGE META]
-	<!-- generate it in Parse
-    xlarge_view:0001040d...8b-ACA0AC-640-543
-    xlarge_list:0001040d...8b-ACA0AC-320-284
-    large_view:0002040d...8b-ACA0AC-480-320
-    large_list:0001040d...8b-ACA0AC-240-190
-    medium_view:0001040d...8b-ACA0AC-320-256
-    medium_list:0002040d...8b-ACA0AC-160-102
-    -->
+{
+	"xlarge_view": "0001-webp-xlarge-view-04...8b-ACA0AC-640-543"
+	"xlarge_list": "0001-webp-xlarge-list-04...8b-ACA0AC-320-284"
+	"large_view": "0001-webp-large-view-04...8b-ACA0AC-480-320"
+	"large_list": "0001-webp-large-list-04...8b-ACA0AC-240-190"
+	"medium_view": "0001-webp-medium-view-04...8b-ACA0AC-320-256"
+	"medium_list": "0001-webp-medium-list-04...8b-ACA0AC-160-102"
+}
 
 ### DIR
      

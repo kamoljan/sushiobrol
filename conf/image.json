@@ -1,60 +1,14 @@
 {
 	"machine": "0001",
-	"format":["jpeg", "webp"],
+	"format":["webp"],
+	"hash": "",
+	"color": "",
 	"screen":[
-	    {"density": "xlarge", "ui": "view", "width": 640, "height": 543},
-   	    {"density": "xlarge", "ui": "list", "width": 320, "height": 284},
-   	    {"density": "large",  "ui": "view", "width": 480, "height": 320},
-   	    {"density": "large",  "ui": "list", "width": 240, "height": 190},
-   	    {"density": "medium", "ui": "view", "width": 320, "height": 256},
-   	    {"density": "medium", "ui": "list", "width": 160, "height": 102}
+	    {"density": "xlarge", "ui": "view", "width": 640, "height": 0},
+	    {"density": "xlarge", "ui": "list", "width": 320, "height": 0},
+   	    {"density": "large",  "ui": "view", "width": 480, "height": 0},
+   	    {"density": "large",  "ui": "list", "width": 240, "height": 0},
+   	    {"density": "medium", "ui": "view", "width": 320, "height": 0},
+   	    {"density": "medium", "ui": "list", "width": 160, "height": 0}
     ]
 }
-
-// {
-// 	"machine": "0001",
-// 	"format":["jpeg", "webp"],
-// 	"density":["origin", "xlarge", "large", "medium"],
-// 	"ui": ["list":, "view"]
-// }
-
-// 0001/
-//     webp/
-//         origin/view/04/0d/0001-04...8b-ACA0AC-640-543
-//         origin/list/04/0d/0001-04...8b-ACA0AC-320-271
-//         xlarge/view/04/0d/0001-04...8b-ACA0AC-640-543
-//         xlarge/list/04/0d/0001-04...8b-ACA0AC-320-284
-//         large/view/04/0d/0001-04...8b-ACA0AC-480-320
-//         large/list/04/0d/0001-04...8b-ACA0AC-240-190
-//         medium/view/04/0d/0001-04...8b-ACA0AC-320-256
-//         medium/list/04/0d/0001-04...8b-ACA0AC-160-102
-
-/*
-{
-	"machine": "0001",
-	"format":["jpeg", "webp"],
-	"density":[
-	    {
-	    	"name": "xlarge",
-	    	"value": [
-	    	    {"ui": "view", "value": {"width": 640, "height": 543}},
-	    	    {"ui": "list", "value": {"width": 320, "height": 284}}
-	    	]
-	    },
-	    {
-	    	"name": "large",
-	    	"value": [
-	    	    {"ui": "view", "value": {"width": 480, "height": 320}},
-	    	    {"ui": "list", "value": {"width": 240, "height": 190}}
-	    	]
-	    },
-	    {
-	    	"name": "medium",
-	    	"value": [
-	    	    {"ui": "view", "value": {"width": 320, "height": 256}},
-	    	    {"ui": "list", "value": {"width": 160, "height": 102}}
-	    	]
-	    }
-    ]
-}
-*/
