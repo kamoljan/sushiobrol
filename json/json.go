@@ -5,13 +5,18 @@ import (
 	"log"
 )
 
-type Result struct {
-	Newborn string `json:"newborn"` //0001_040db0bc2fc49ab41fd81294c7d195c7d1de358b_ACA0AC_100_160
-}
-
 type Msg struct {
 	Status string      `json:"status"` //"ok"
 	Result interface{} `json:"data"`   //{newborn: "0001_040db0bc2fc49ab41fd81294c7d195c7d1de358b_ACA0AC_100_160"}
+}
+
+type Result struct {
+	Image []Fid `json:"image"`
+}
+
+type Fid struct {
+	Field string `json:"field"`
+	Value string `json:"value"`
 }
 
 func Message(status string, result interface{}) []byte {

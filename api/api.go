@@ -4,8 +4,9 @@ import (
 	"bytes"
 	"crypto/sha1"
 	"fmt"
+	"github.com/chai2010/webp"
+	"github.com/nfnt/resize"
 	"image"
-	// "image/jpeg"
 	_ "image/jpeg"
 	_ "image/png"
 	"io"
@@ -13,25 +14,14 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/chai2010/webp"
-	"github.com/nfnt/resize"
-
 	"github.com/kamoljan/sushiobrol/conf"
 	"github.com/kamoljan/sushiobrol/json"
 )
 
-type IConf struct {
-	Image   image.Image
-	Machine string
-	Format  string
-	Density string
-	Ui      string
-	Hash    string
-	Color   string
-	Width   uint
-	Height  uint
-	Fid     string
-	Path    string
+type iconf struct {
+	image                                                image.Image
+	machine, format, density, ui, hash, color, fid, path string
+	width, height                                        uint
 }
 
 func Put(w http.ResponseWriter, r *http.Request) {
@@ -65,51 +55,52 @@ func Put(w http.ResponseWriter, r *http.Request) {
 		w.Write(json.Message("ERROR", "Unable to decode your image"))
 		return
 	}
-	var iConf IConf
-	iConf.Machine = conf.Image.Machine
-	iConf.Image = img
-	iConf.Hash = fmt.Sprintf("%x", sha1.Sum(buf.Bytes()))
-	setColor(&iConf)
+
+	var result json.Result
+	var iconf iconf
+	iconf.machine = conf.Image.Machine
+	iconf.image = img
+	iconf.hash = fmt.Sprintf("%x", sha1.Sum(buf.Bytes()))
+	setColor(&iconf)
 	for _, format := range conf.Image.Format { // jpeg, webp, ...
 		for _, screen := range conf.Image.Screen {
-			iConf.Format = format
-			iConf.Ui = screen.Ui
-			iConf.Density = screen.Density
-			iConf.Width = screen.Width
-			if imgToFile(&iConf); err != nil {
+			iconf.format = format
+			iconf.ui = screen.Ui
+			iconf.density = screen.Density
+			iconf.width = screen.Width
+			iconf.fid, err = imgToFile(&iconf)
+			if err != nil {
 				w.Write(json.Message("ERROR", "Unable to create a file"))
 				return
 			}
+			fid := json.Fid{fmt.Sprintf("%s_%s", screen.Density, screen.Ui), iconf.fid}
+			result.Image = append(result.Image, fid)
 		}
 	}
+	w.Write(json.Message("OK", &result))
 }
 
-func setColor(ic *IConf) {
-	img1x1 := resize.Resize(1, 1, ic.Image, resize.NearestNeighbor)
+func setColor(ic *iconf) {
+	img1x1 := resize.Resize(1, 1, ic.image, resize.NearestNeighbor)
 	red, green, blue, _ := img1x1.At(0, 0).RGBA()
-	ic.Color = fmt.Sprintf("%X%X%X", red>>8, green>>8, blue>>8) // removing 1 byte 9A16->9A
+	ic.color = fmt.Sprintf("%X%X%X", red>>8, green>>8, blue>>8) // removing 1 byte 9A16->9A
 }
 
-func imgToFile(ic *IConf) error {
-	img := resize.Resize(ic.Width, 0, ic.Image, resize.NearestNeighbor)
-	ic.Height = uint(img.Bounds().Size().Y)
-	ic.Fid = fmt.Sprintf("%s-%s-%s-%s-%s-%s-%d-%d", ic.Machine, ic.Format, ic.Density, ic.Ui, ic.Hash, ic.Color, ic.Width, ic.Height)
-	dir := fmt.Sprintf("%s/%s/%s/%s/%s/%s/%s", conf.SushiobrolStore, ic.Machine, ic.Format, ic.Density, ic.Ui, ic.Hash[0:2], ic.Hash[2:4])
-	ic.Path = fmt.Sprintf("%s/%s", dir, ic.Fid)
-	out, err := os.Create(ic.Path)
-	defer out.Close()
+func imgToFile(ic *iconf) (string, error) {
+	img := resize.Resize(ic.width, 0, ic.image, resize.NearestNeighbor)
+	ic.height = uint(img.Bounds().Size().Y)
+	ic.fid = fmt.Sprintf("%s-%s-%s-%s-%s-%s-%d-%d", ic.machine, ic.format, ic.density, ic.ui, ic.hash, ic.color, ic.width, ic.height)
+	dir := fmt.Sprintf("%s/%s/%s/%s/%s/%s/%s", conf.SushiobrolStore, ic.machine, ic.format, ic.density, ic.ui, ic.hash[0:2], ic.hash[2:4])
+	ic.path = fmt.Sprintf("%s/%s", dir, ic.fid)
+	out, err := os.Create(ic.path)
 	if err != nil {
 		log.Println(err)
-		return err
+		return "", err
 	}
+	defer out.Close()
 	if webp.Encode(out, img, &webp.Options{conf.Lossless, conf.Quality}); err != nil {
 		fmt.Println("ERROR: Unable to Encode into webp")
-		return err
+		return "", err
 	}
-	logIConf(ic)
-	return err
-}
-
-func logIConf(ic *IConf) {
-	fmt.Println("Path =", ic.Path)
+	return ic.fid, err
 }
