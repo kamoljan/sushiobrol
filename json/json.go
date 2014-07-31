@@ -6,8 +6,8 @@ import (
 )
 
 type Msg struct {
-	Status string      `json:"status"` //"ok"
-	Result interface{} `json:"data"`   //{newborn: "0001_040db0bc2fc49ab41fd81294c7d195c7d1de358b_ACA0AC_100_160"}
+	Status string      `json:"status"`
+	Result interface{} `json:"data"`
 }
 
 type Result struct {
@@ -31,6 +31,7 @@ func Message(status string, result interface{}) []byte {
 	return b
 }
 
+/*
 type Msg3 struct {
 	Status  string      `json:"status"`  //"OK" || "ERROR"
 	Result  interface{} `json:"data"`    //{newborn: "0001_040db0bc2fc49ab41fd81294c7d195c7d1de358b_ACA0AC_100_160"}
@@ -49,3 +50,4 @@ func Message3(status string, result interface{}, message string) []byte {
 	}
 	return b
 }
+*/

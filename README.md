@@ -15,49 +15,8 @@
     [file content]
     
     HTTP/1.1 200 OK
-    [IMAGE META]
+    [FIDs]
     {
-        "image": {
-        	"machine": "0001",
-            "hash": "8787bec619ff019fd17fe02599a384d580bf6779",
-            "color": "ACA0AC",
-            "width": 840,
-            "height": 756,
-           	"density":[
-           	    {
-           	    	"name": "xlarge",
-           	    	"value": [
-           	    	    {"ui": "view", "value": {"width": 640, "height": 543}},
-           	    	    {"ui": "list", "value": {"width": 320, "height": 284}}
-           	    	]
-           	    },
-           	    {
-           	        "name": "large",
-           	    	"value": [
-           	    	    {"ui": "view", "value": {"width": 480, "height": 320}},
-           	    	    {"ui": "list", "value": {"width": 240, "height": 190}}
-           	    	]
-           	    },
-           	    {
-           	    	"name": "medium",
-           	    	"value": [
-           	    	    {"ui": "view", "value": {"width": 320, "height": 256}},
-           	    	    {"ui": "list", "value": {"width": 160, "height": 102}}
-           	    	]
-           	    }
-            ]
-        }
-    }
-
-### GET /[FID] HTTP/1.1
-
-	Content-Type:image/jpeg
-	HTTP/1.1 200 OK
-	[file content]
-
-
-### FID
-
     "status": "OK",
     "data": {
         "image": [
@@ -87,6 +46,14 @@
             }
         ]
     }
+    }
+
+### GET /[FID] HTTP/1.1
+
+	Content-Type:image/jpeg
+	HTTP/1.1 200 OK
+	[file content]
+
 
 ### PARSE
 {
