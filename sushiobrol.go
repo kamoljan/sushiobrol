@@ -48,7 +48,7 @@ func main() {
 	initStoreDirs()
 	http.HandleFunc("/", api.Put)
 	// http.HandleFunc("/noimageprocess/", api.PutNoImageProcess)
-	// http.HandleFunc("/egg/", api.Get)
+	http.HandleFunc("/fid/", api.Get)
 	err := http.ListenAndServe(fmt.Sprintf(":%d", conf.SushiobrolPort), logHandler(http.DefaultServeMux))
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
