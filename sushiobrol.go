@@ -46,7 +46,7 @@ func logHandler(h http.Handler) http.Handler {
 
 func main() {
 	initStoreDirs()
-	http.HandleFunc("/", api.Put)
+	http.HandleFunc("/", api.Post)
 	// http.HandleFunc("/noimageprocess/", api.PutNoImageProcess)
 	http.HandleFunc("/fid/", api.Get)
 	err := http.ListenAndServe(fmt.Sprintf(":%d", conf.SushiobrolPort), logHandler(http.DefaultServeMux))

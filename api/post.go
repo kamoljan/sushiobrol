@@ -7,6 +7,7 @@ import (
 	"github.com/chai2010/webp"
 	"github.com/nfnt/resize"
 	"image"
+	_ "image/gif"
 	_ "image/jpeg"
 	_ "image/png"
 	"io"
@@ -24,8 +25,8 @@ type iconf struct {
 	width, height                                        uint
 }
 
-func Put(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "PUT" {
+func Post(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "POST" {
 		w.Write(json.Message("ERROR", "Not supported Method"))
 		return
 	}
@@ -40,7 +41,7 @@ func Put(w http.ResponseWriter, r *http.Request) {
 		if err == io.EOF {
 			break
 		}
-		if part.FileName() == "" { // if empy skip this iteration
+		if part.FileName() == "" { // if empty skip this iteration
 			continue
 		}
 		_, err = io.Copy(buf, part)
@@ -53,8 +54,9 @@ func Put(w http.ResponseWriter, r *http.Request) {
 	var result json.Result
 	var ic iconf
 	ic.machine = conf.Image.Machine
-	if ic.image, _, err = image.Decode(buf); err != nil {
-		w.Write(json.Message("ERROR", "Unable to decode your image"))
+	// if ic.image, _, err = image.Decode(buf); err != nil {
+	if ic.image, err = webp.Decode(buf); err != nil { // TODO: only support webp for now
+		w.Write(json.Message("ERROR", "Unable to decode your image"+err.Error()))
 		return
 	}
 	ic.hash = fmt.Sprintf("%x", sha1.Sum(buf.Bytes()))
