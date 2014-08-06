@@ -7,6 +7,7 @@ import (
 )
 
 const (
+	InputType       = "jpeg"
 	SushiobrolId    = 1
 	SushiobrolStore = "var/sushiobrol/store"
 	SushiobrolPort  = 9090

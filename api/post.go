@@ -54,9 +54,13 @@ func Post(w http.ResponseWriter, r *http.Request) {
 	var result json.Result
 	var ic iconf
 	ic.machine = conf.Image.Machine
-	// if ic.image, _, err = image.Decode(buf); err != nil {
-	if ic.image, err = webp.Decode(buf); err != nil { // TODO: only support webp for now
-		w.Write(json.Message("ERROR", "Unable to decode your image"+err.Error()))
+	if conf.InputType == "jpeg" {
+		ic.image, _, err = image.Decode(buf)
+	} else {
+		ic.image, err = webp.Decode(buf)
+	}
+	if err != nil {
+		w.Write(json.Message("ERROR", "Unable to decode your image! Type="+conf.InputType+" error:"+err.Error()))
 		return
 	}
 	ic.hash = fmt.Sprintf("%x", sha1.Sum(buf.Bytes()))
