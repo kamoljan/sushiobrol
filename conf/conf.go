@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	InputType       = "jpeg"
+	InputType       = "webp"
 	SushiobrolId    = 1
 	SushiobrolStore = "var/sushiobrol/store"
 	SushiobrolPort  = 9090
