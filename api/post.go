@@ -1,7 +1,7 @@
 package api
 
 import (
-	"bytes"
+	"bufio"
 	"crypto/sha1"
 	"fmt"
 	"github.com/chai2010/webp"
@@ -30,36 +30,23 @@ func Post(w http.ResponseWriter, r *http.Request) {
 		w.Write(json.Message("ERROR", "Not supported Method"))
 		return
 	}
-	reader, err := r.MultipartReader()
+	f, _, err := r.FormFile("image")
 	if err != nil {
-		w.Write(json.Message("ERROR", "Client should support multipart/form-data"))
+		w.Write(json.Message("ERROR", "Can't Find Image"))
 		return
 	}
-	buf := bytes.NewBufferString("")
-	for {
-		part, err := reader.NextPart()
-		if err == io.EOF {
-			break
-		}
-		if part.FileName() == "" { // if empty skip this iteration
-			continue
-		}
-		_, err = io.Copy(buf, part)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-	}
-	defer r.Body.Close()
+	defer f.Close()
+	buf := bufio.NewReader(f)
+	h := sha1.New()
 	var result json.Result
 	var ic iconf
 	ic.machine = conf.Image.Machine
-	ic.hash = fmt.Sprintf("%x", sha1.Sum(buf.Bytes()))
 	if conf.InputType == "jpeg" {
-		ic.image, _, err = image.Decode(buf)
+		ic.image, _, err = image.Decode(io.TeeReader(buf, h))
 	} else {
-		ic.image, err = webp.Decode(buf)
+		ic.image, err = webp.Decode(io.TeeReader(buf, h))
 	}
+	ic.hash = fmt.Sprintf("%x", h.Sum(nil))
 	if err != nil {
 		w.Write(json.Message("ERROR", "Unable to decode your image! Type="+conf.InputType+" error:"+err.Error()))
 		return
