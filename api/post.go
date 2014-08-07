@@ -54,6 +54,7 @@ func Post(w http.ResponseWriter, r *http.Request) {
 	var result json.Result
 	var ic iconf
 	ic.machine = conf.Image.Machine
+	ic.hash = fmt.Sprintf("%x", sha1.Sum(buf.Bytes()))
 	if conf.InputType == "jpeg" {
 		ic.image, _, err = image.Decode(buf)
 	} else {
@@ -63,7 +64,6 @@ func Post(w http.ResponseWriter, r *http.Request) {
 		w.Write(json.Message("ERROR", "Unable to decode your image! Type="+conf.InputType+" error:"+err.Error()))
 		return
 	}
-	ic.hash = fmt.Sprintf("%x", sha1.Sum(buf.Bytes()))
 	setColor(&ic)
 	for _, format := range conf.Image.Format { // jpeg, webp, ...
 		for _, screen := range conf.Image.Screen {
