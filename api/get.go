@@ -6,6 +6,7 @@ import (
 	"html"
 	"log"
 	"net/http"
+	"strings"
 )
 
 /*
@@ -22,6 +23,7 @@ func Get(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, path)
 }
 
-func parsePath(eid string) string {
-	return fmt.Sprintf("%s/%s/%s/%s/%s/%s/%s/%s", conf.SushiobrolStore, eid[:4], eid[5:9], eid[10:16], eid[17:21], eid[22:24], eid[24:26], eid)
+func parsePath(fid string) string {
+	a := strings.Split(fid, "-")
+	return fmt.Sprintf("%s/%s/%s/%s/%s/%s/%s/%s", conf.SushiobrolStore, a[0], a[1], a[2], a[3], a[4][:2], a[4][2:4], fid)
 }
