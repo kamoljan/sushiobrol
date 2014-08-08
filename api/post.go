@@ -8,6 +8,7 @@ import (
 	"github.com/nfnt/resize"
 	"image"
 	_ "image/gif"
+	"image/jpeg"
 	_ "image/jpeg"
 	_ "image/png"
 	"io"
@@ -81,9 +82,17 @@ func imgToFile(ic *iconf) (string, error) {
 		return "", err
 	}
 	defer out.Close()
-	if webp.Encode(out, img, &webp.Options{conf.Lossless, conf.Quality}); err != nil {
-		fmt.Println("ERROR: Unable to Encode into webp")
-		return "", err
+	if conf.InputType == "jpeg" {
+		err = jpeg.Encode(out, img, nil) // write image to file
+		if err != nil {
+			fmt.Println("ERROR: Unable to Encode into webp")
+			return "", err
+		}
+	} else {
+		if webp.Encode(out, img, &webp.Options{conf.Lossless, conf.Quality}); err != nil {
+			fmt.Println("ERROR: Unable to Encode into webp")
+			return "", err
+		}
 	}
 	return ic.fid, err
 }
